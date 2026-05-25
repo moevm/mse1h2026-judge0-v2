@@ -3,7 +3,7 @@ import concurrent.futures
 import time
 import random
 
-TARGET_URL = "http://<enter ip virtual_machine>:8000"
+TARGET_URL = "http://<enter ip virtual_machine>:2358"
 TOTAL_STUDENTS = 50
 CONCURRENT_THREADS = 50
 

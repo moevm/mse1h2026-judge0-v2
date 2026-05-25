@@ -1,0 +1,253 @@
+ ТЕСТ №1 
+INPUT:
+pushHead 30080
+pushHead 28356
+pushHead 75978
+sort
+pushTail 89993
+push 3 787
+pop 2
+push 2 44876
+isEmpty
+count
+median
+reverseBlocks
+end
+
+EXPECTED OUTPUT:
+0
+5
+30080.0
+List:
+89993
+30080
+28356
+44876
+787
+
+ ТЕСТ №2 
+INPUT:
+pushTail 1
+pushTail 2
+pushTail 3
+pushTail 4
+pushTail 5
+push 2 100
+count
+end
+
+EXPECTED OUTPUT:
+6
+List:
+1
+2
+100
+3
+4
+5
+
+
+ ТЕСТ №3 
+INPUT:
+pushTail 10
+pushTail 20
+pushTail 30
+pushTail 40
+pushTail 50
+pop 0
+pop 3
+count
+end
+
+EXPECTED OUTPUT:
+3
+List:
+20
+30
+40
+
+
+ ТЕСТ №4 
+INPUT:
+pushTail 5
+pushTail 7
+pushTail 5
+pushTail 8
+pushTail 7
+pushTail 9
+removeDuplicates
+end
+
+EXPECTED OUTPUT:
+List:
+5
+7
+8
+9
+
+
+ ТЕСТ №5 
+INPUT:
+pushTail 12
+pushTail 3
+pushTail 8
+pushTail 20
+pushTail 5
+pushTail 7
+push 2 15
+pop 4
+median
+end
+
+EXPECTED OUTPUT:
+7.5
+List:
+12
+3
+15
+8
+5
+7
+
+
+ ТЕСТ №6 
+INPUT:
+pushTail 1
+pushTail 2
+pushTail 3
+pushTail 4
+pushTail 5
+pushTail 6
+pushTail 7
+pushTail 8
+pushTail 9
+reverseBlocks
+end
+
+EXPECTED OUTPUT:
+List:
+9
+5
+6
+7
+8
+1
+2
+3
+4
+
+
+ ТЕСТ №7 
+INPUT:
+count
+median
+isEmpty
+end
+
+EXPECTED OUTPUT:
+0
+0.0
+1
+List:
+
+
+ ТЕСТ №8 
+INPUT:
+push 0 10
+end
+
+EXPECTED OUTPUT:
+List:
+10
+
+
+ ТЕСТ №9 
+INPUT:
+push 5 7
+end
+
+EXPECTED OUTPUT:
+List:
+7
+
+
+ ТЕСТ №10 
+INPUT:
+pushTail 1
+pop 5
+end
+
+EXPECTED OUTPUT:
+List:
+1
+
+
+ ТЕСТ №11 
+INPUT:
+pushTail 1
+pushTail 2
+pushTail 3
+pushTail 4
+pushTail 5
+pop 1
+end
+
+EXPECTED OUTPUT:
+List:
+1
+3
+4
+5
+
+
+ ТЕСТ №12 
+INPUT:
+pushTail 1
+pushTail 3
+pushTail 5
+pushTail 7
+median
+end
+
+EXPECTED OUTPUT:
+4.0
+List:
+1
+3
+5
+7
+
+
+ ТЕСТ №13 
+INPUT:
+pushTail 2
+pushTail 4
+pushTail 6
+median
+end
+
+EXPECTED OUTPUT:
+4.0
+List:
+2
+4
+6
+
+
+ ТЕСТ №14 
+INPUT:
+pushTail 1
+pushTail 2
+pushTail 2
+pushTail 3
+pushTail 3
+pushTail 4
+removeDuplicates
+end
+
+EXPECTED OUTPUT:
+List:
+1
+2
+3
+4

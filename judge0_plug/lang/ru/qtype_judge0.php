@@ -1,0 +1,49 @@
+<?php
+$string['pluginname'] = 'Judge0 — проверка кода';
+$string['pluginname_help'] = 'Студенты пишут код, который автоматически проверяется через Judge0.';
+$string['pluginname_link'] = 'question/type/judge0';
+$string['pluginnameadding'] = 'Добавление задачи Judge0';
+$string['pluginnameediting'] = 'Редактирование задачи Judge0';
+$string['pluginnamesummary'] = 'Автоматическая проверка кода через Judge0.';
+$string['checker_code'] = 'Код проверки';
+$string['checker_code_help'] = 'Этот код вставляется ПЕРЕД решением студента. Используйте его для #include, структур и функции main().';
+$string['expected_output'] = 'Ожидаемый вывод';
+$string['language_id'] = 'Язык программирования (основной)';
+$string['language_id_help'] = 'Выберите язык, на котором студенты будут писать решение по умолчанию.';
+$string['allowed_languages'] = 'Доступные языки';
+$string['allowed_languages_help'] = 'Выберите языки, которые разрешено использовать студентам. Если выбрано несколько, студент сможет выбрать нужный из выпадающего списка.';
+$string['choose_language'] = 'Язык';
+$string['server_url'] = 'URL сервера Judge0';
+$string['server_url_desc'] = 'Адрес Judge0 API. Для локального теста на macOS можно временно указать https://ce.judge0.com; для production используйте только личный Judge0 в закрытой сети, например http://judge0-server:2358.';
+$string['auth_header'] = 'Заголовок авторизации Judge0';
+$string['auth_header_desc'] = 'Имя HTTP-заголовка для закрытого Judge0 API, например X-Auth-Token. Оставьте пустым только для локального публичного тестового сервера.';
+$string['auth_token'] = 'Токен авторизации Judge0';
+$string['auth_token_desc'] = 'Секретный токен для Judge0 API. Не нужен для временного локального теста через публичный CE endpoint.';
+$string['poll_timeout'] = 'Таймаут ожидания Judge0';
+$string['poll_timeout_desc'] = 'Максимальное время polling одного batch-запроса в секундах. Значение ограничивается диапазоном 5-120.';
+$string['monaco_base_url'] = 'Base URL Monaco Editor';
+$string['monaco_base_url_desc'] = 'Локальный URL каталога Monaco vs, например /question/type/judge0/monaco/vs. Если пусто, используется обычное textarea без внешних скриптов.';
+$string['invalid_language'] = 'Выбранный язык не разрешён для этой задачи.';
+$string['generator_failed'] = 'Ошибка генератора входных данных.';
+$string['reference_failed'] = 'Ошибка эталонного решения.';
+$string['judge0_unavailable'] = 'Judge0 недоступен или вернул некорректный ответ.';
+
+$string['reference_solution'] = 'Идеальное решение';
+$string['reference_solution_help'] = 'Эталонный код, который генерирует правильный ответ для тестов.';
+$string['reference_solution_language_id'] = 'Язык эталонного решения';
+$string['compiler_options'] = 'Опции компилятора';
+$string['compiler_options_help'] = 'Дополнительные флаги компилятора, например -fsanitize=address для GCC.';
+$string['testcases'] = 'Тестовые данные (Test Cases)';
+$string['test_input'] = 'Входные данные (stdin)';
+$string['test_expected_output'] = 'Ожидаемый вывод (stdout)';
+$string['is_hidden'] = 'Скрытый тест';
+$string['testcase_weight'] = 'Вес теста';
+$string['add_testcase'] = 'Добавить еще один тест';
+
+$string['input_generator_header'] = 'Динамическая генерация данных (Опционально)';
+$string['input_generator_code'] = 'Код генератора (Input Generator)';
+$string['input_generator_code_help'] = 'Скрипт, который получает ID студента (число) на стандартный ввод (stdin) и выводит (stdout) уникальные входные данные для теста. Оставьте пустым, если генерация не нужна.';
+$string['input_generator_language_id'] = 'Язык программирования генератора';
+
+$string['recheck_button'] = 'Проверить снова';
+$string['language_label'] = 'Язык:';

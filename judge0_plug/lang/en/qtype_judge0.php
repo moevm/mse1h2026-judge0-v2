@@ -1,0 +1,49 @@
+<?php
+$string['pluginname'] = 'Judge0 Code Evaluator';
+$string['pluginname_help'] = 'Ask students to write code and automatically evaluate it using Judge0.';
+$string['pluginname_link'] = 'question/type/judge0';
+$string['pluginnameadding'] = 'Adding a Judge0 Question';
+$string['pluginnameediting'] = 'Editing a Judge0 Question';
+$string['pluginnamesummary'] = 'Evaluates student code via Judge0.';
+$string['checker_code'] = 'Checker Code';
+$string['checker_code_help'] = 'This code is prepended before the student\'s code. Use it for includes, structs, and main().';
+$string['expected_output'] = 'Expected Output';
+$string['language_id'] = 'Programming Language (Default)';
+$string['language_id_help'] = 'Select the default programming language students will use.';
+$string['allowed_languages'] = 'Allowed Languages';
+$string['allowed_languages_help'] = 'Select the languages students are allowed to use. If more than one is selected, students will be able to choose their preferred language.';
+$string['choose_language'] = 'Language';
+$string['server_url'] = 'Judge0 Server URL';
+$string['server_url_desc'] = 'Judge0 API address. For local testing on macOS you may temporarily use https://ce.judge0.com; production must use a private Judge0 server on a closed network, e.g. http://judge0-server:2358.';
+$string['auth_header'] = 'Judge0 Auth Header';
+$string['auth_header_desc'] = 'HTTP header name for a private Judge0 API, e.g. X-Auth-Token. Leave empty only for local testing against a public endpoint.';
+$string['auth_token'] = 'Judge0 Auth Token';
+$string['auth_token_desc'] = 'Secret token for the Judge0 API. Not needed for temporary local testing against the public CE endpoint.';
+$string['poll_timeout'] = 'Judge0 Poll Timeout';
+$string['poll_timeout_desc'] = 'Maximum polling time for one batch request in seconds. Values are clamped to 5-120.';
+$string['monaco_base_url'] = 'Monaco Editor Base URL';
+$string['monaco_base_url_desc'] = 'Local URL of the Monaco vs directory, e.g. /question/type/judge0/monaco/vs. If empty, the question uses a plain textarea and no external script.';
+$string['invalid_language'] = 'The selected language is not allowed for this question.';
+$string['generator_failed'] = 'Input generator failed.';
+$string['reference_failed'] = 'Reference solution failed.';
+$string['judge0_unavailable'] = 'Judge0 is unavailable or returned an invalid response.';
+
+$string['reference_solution'] = 'Reference Solution';
+$string['reference_solution_help'] = 'Reference code that generates the correct output for test cases.';
+$string['reference_solution_language_id'] = 'Reference Solution Language';
+$string['compiler_options'] = 'Compiler Options';
+$string['compiler_options_help'] = 'Optional compiler flags, e.g. -fsanitize=address for GCC.';
+$string['testcases'] = 'Test Cases';
+$string['test_input'] = 'Standard Input (stdin)';
+$string['test_expected_output'] = 'Expected Output (stdout)';
+$string['is_hidden'] = 'Hidden Test';
+$string['testcase_weight'] = 'Test Weight';
+$string['add_testcase'] = 'Add another test case';
+
+$string['input_generator_header'] = 'Dynamic Input Generation (Optional)';
+$string['input_generator_code'] = 'Input Generator Code';
+$string['input_generator_code_help'] = 'A script that receives the student ID via standard input (stdin) and outputs unique test data. Leave empty if dynamic generation is not needed.';
+$string['input_generator_language_id'] = 'Generator Programming Language';
+
+$string['recheck_button'] = 'Run tests again';
+$string['language_label'] = 'Language:';

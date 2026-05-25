@@ -43,9 +43,9 @@
 
 Далее объясние логики работы
 
-Есть два поля - Checker Code и Expected Output. 
+Есть два поля - Expected input и Expected Output. 
 
-1) Checker Code  - необходим чтобы вызвать функцию решение.
+1) Epected input  - необходим чтобы вызвать функцию решение.
 2) Expected Output - проверка вывода функции решения
 3) При установке Memory limit необходимо установить от 4000 кб (для python) и 20 Cpu Time limit
 

@@ -159,7 +159,9 @@ https://drive.google.com/file/d/1N7VKTNtBRrirRcjpEr-dRo6GeM5XdAtS/view
 
 ### Презентация
 https://docs.google.com/presentation/d/1e3A5K-_yb_dJxYJxLZL051l49dLoOtOUpJytlUlmwTE/edit?usp=sharing
-### Скринкасты и запись встречи
+### Скринкаст
+https://drive.google.com/file/d/1DYltL82k3tY1l9y3F-iG4EVFtAuO1PK5/view
+### Запись встречи
 https://drive.google.com/file/d/16P4ctoraK22niMgd1aV-sKN1YqAY7EnO/view
 
 ### Выполненные задачи (по плану)

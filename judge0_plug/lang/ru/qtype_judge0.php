@@ -33,6 +33,10 @@ $string['reference_solution_help'] = 'Эталонный код, который 
 $string['reference_solution_language_id'] = 'Язык эталонного решения';
 $string['compiler_options'] = 'Опции компилятора';
 $string['compiler_options_help'] = 'Дополнительные флаги компилятора, например -fsanitize=address для GCC.';
+$string['cpu_time_limit'] = 'Лимит CPU-времени';
+$string['cpu_time_limit_help'] = 'Максимальное CPU-время для кода студента в секундах. Оставьте пустым, чтобы использовать значение Judge0 по умолчанию.';
+$string['memory_limit'] = 'Лимит памяти';
+$string['memory_limit_help'] = 'Максимальная память для кода студента в KB. Оставьте пустым, чтобы использовать значение Judge0 по умолчанию.';
 $string['testcases'] = 'Тестовые данные (Test Cases)';
 $string['test_input'] = 'Входные данные (stdin)';
 $string['test_expected_output'] = 'Ожидаемый вывод (stdout)';
@@ -46,4 +50,12 @@ $string['input_generator_code_help'] = 'Скрипт, который получ�
 $string['input_generator_language_id'] = 'Язык программирования генератора';
 
 $string['recheck_button'] = 'Проверить снова';
+$string['recheck_wait'] = 'Подождите перед повторной проверкой.';
+$string['recheck_saving'] = 'Сохраняем код...';
+$string['recheck_queued'] = 'Тесты поставлены в очередь...';
+$string['recheck_running'] = 'Тесты запускаются...';
+$string['recheck_passed'] = 'Тесты пройдены.';
+$string['recheck_failed'] = 'Тесты не пройдены.';
+$string['recheck_error'] = 'Не удалось повторно запустить тесты.';
+$string['recheck_timeout'] = 'Тесты еще в очереди. Подождите и обновите результат позже.';
 $string['language_label'] = 'Язык:';

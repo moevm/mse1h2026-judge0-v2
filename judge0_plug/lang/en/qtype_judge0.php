@@ -33,6 +33,10 @@ $string['reference_solution_help'] = 'Reference code that generates the correct 
 $string['reference_solution_language_id'] = 'Reference Solution Language';
 $string['compiler_options'] = 'Compiler Options';
 $string['compiler_options_help'] = 'Optional compiler flags, e.g. -fsanitize=address for GCC.';
+$string['cpu_time_limit'] = 'CPU time limit';
+$string['cpu_time_limit_help'] = 'Maximum CPU time for student code in seconds. Leave empty to use the Judge0 default.';
+$string['memory_limit'] = 'Memory limit';
+$string['memory_limit_help'] = 'Maximum memory for student code in KB. Leave empty to use the Judge0 default.';
 $string['testcases'] = 'Test Cases';
 $string['test_input'] = 'Standard Input (stdin)';
 $string['test_expected_output'] = 'Expected Output (stdout)';
@@ -46,4 +50,12 @@ $string['input_generator_code_help'] = 'A script that receives the student ID vi
 $string['input_generator_language_id'] = 'Generator Programming Language';
 
 $string['recheck_button'] = 'Run tests again';
+$string['recheck_wait'] = 'Please wait before running tests again.';
+$string['recheck_saving'] = 'Saving code...';
+$string['recheck_queued'] = 'Tests are queued...';
+$string['recheck_running'] = 'Running tests...';
+$string['recheck_passed'] = 'Tests passed.';
+$string['recheck_failed'] = 'Tests failed.';
+$string['recheck_error'] = 'Could not run tests again.';
+$string['recheck_timeout'] = 'Tests are still queued. Please wait and refresh the result later.';
 $string['language_label'] = 'Language:';

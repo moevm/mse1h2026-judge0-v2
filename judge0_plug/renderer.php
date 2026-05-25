@@ -152,6 +152,15 @@ class qtype_judge0_renderer extends qtype_renderer {
                     if (event.data.type === "set_language" && event.data.mode) {
                         monaco.editor.setModelLanguage(editor.getModel(), event.data.mode);
                     }
+                    if (event.data.type === "get_value") {
+                        window.parent.postMessage({
+                            type: "monaco_value",
+                            id: editorId,
+                            channel: channel,
+                            requestId: event.data.requestId || "",
+                            value: editor.getValue()
+                        }, "*");
+                    }
                 });
 
                 window.parent.postMessage({
@@ -177,7 +186,8 @@ class qtype_judge0_renderer extends qtype_renderer {
             'id' => $textarea_id,
             'name' => $inputname,
             'rows' => 20,
-            'style' => $textarea_style
+            'style' => $textarea_style,
+            'data-qtype-judge0-editor' => '1'
         ));
         
         $html .= html_writer::tag('input', '', array(
@@ -205,10 +215,43 @@ class qtype_judge0_renderer extends qtype_renderer {
                 var editorId = {$editor_id_js};
                 var channel = {$iframe_channel_js};
                 var initialValue = {$initial_value_js};
+                var pendingSyncs = {};
 
+                hiddenInput.value = initialValue;
                 hiddenInput.setAttribute('data-qtype-judge0-editor', '1');
                 hiddenInput.qtypeJudge0Sync = function() {
                     return hiddenInput.value;
+                };
+                hiddenInput.qtypeJudge0RequestSync = function() {
+                    if (typeof Promise === 'undefined' || !iframe || !iframe.contentWindow) {
+                        return null;
+                    }
+
+                    return new Promise(function(resolve) {
+                        var requestId = editorId + '_' + Date.now() + '_' + Math.random();
+                        var done = false;
+                        var finish = function(value) {
+                            if (done) {
+                                return;
+                            }
+                            done = true;
+                            delete pendingSyncs[requestId];
+                            hiddenInput.value = (typeof value === 'string') ? value : hiddenInput.value;
+                            resolve(hiddenInput.value);
+                        };
+
+                        pendingSyncs[requestId] = finish;
+                        window.setTimeout(function() {
+                            finish(hiddenInput.value);
+                        }, 700);
+
+                        iframe.contentWindow.postMessage({
+                            type: 'get_value',
+                            id: editorId,
+                            channel: channel,
+                            requestId: requestId
+                        }, '*');
+                    });
                 };
 
                 var form = hiddenInput.closest('form');
@@ -256,6 +299,15 @@ class qtype_judge0_renderer extends qtype_renderer {
                         }, '*');
                     } else if (event.data.type === 'monaco_change') {
                         hiddenInput.value = event.data.value;
+                        if (typeof jQuery !== 'undefined') {
+                            jQuery(hiddenInput).trigger('change');
+                        } else {
+                            hiddenInput.dispatchEvent(new Event('change', {bubbles: true}));
+                        }
+                    } else if (event.data.type === 'monaco_value') {
+                        if (event.data.requestId && pendingSyncs[event.data.requestId]) {
+                            pendingSyncs[event.data.requestId](event.data.value);
+                        }
                     }
                 });
 
@@ -266,6 +318,11 @@ class qtype_judge0_renderer extends qtype_renderer {
                         var langId = opt.value;
                         if (langInput) {
                             langInput.value = langId;
+                            if (typeof jQuery !== 'undefined') {
+                                jQuery(langInput).trigger('change');
+                            } else {
+                                langInput.dispatchEvent(new Event('change', {bubbles: true}));
+                            }
                         }
                         if (iframe && iframe.contentWindow) {
                             iframe.contentWindow.postMessage({
@@ -293,10 +350,18 @@ class qtype_judge0_renderer extends qtype_renderer {
                 var select = document.getElementById({$dropdown_js});
                 if (textarea) {
                     textarea.setAttribute('data-qtype-judge0-editor', '1');
+                    textarea.qtypeJudge0Sync = function() {
+                        return textarea.value;
+                    };
                 }
                 if (select && langInput) {
                     select.addEventListener('change', function() {
                         langInput.value = select.value;
+                        if (typeof jQuery !== 'undefined') {
+                            jQuery(langInput).trigger('change');
+                        } else {
+                            langInput.dispatchEvent(new Event('change', {bubbles: true}));
+                        }
                     });
                 }
             })();
@@ -333,26 +398,432 @@ class qtype_judge0_renderer extends qtype_renderer {
     }
 
     private function get_recheck_button(question_attempt $qa) {
-        $submit_name = $qa->get_behaviour_field_name('submit');
-        return '
-        <div style="margin-top: 16px; text-align: right;">
-            <button id="judge0_recheck_btn" type="button"
-                style="padding: 8px 20px; background: #0f6cbf; color: #fff;
-                       border: none; border-radius: 4px; cursor: pointer; font-size: 14px;"
-                onclick="(function() {
-                    var btn = document.querySelector(\'input[name=&quot;' . $submit_name . '&quot;]\')
-                           || document.querySelector(\'input[type=&quot;submit&quot;][name$=&quot;-submit&quot;]\')
-                           || document.querySelector(\'button[type=&quot;submit&quot;]\')
-                           || document.querySelector(\'input[type=&quot;submit&quot;]\');
-                    if (btn) {
-                        btn.click();
-                    } else {
-                        console.error(&quot;Check button not found! Expected name: ' . $submit_name . '&quot;);
+        global $CFG;
+
+        $answer_name_js = json_encode($qa->get_qt_field_name('answer'));
+        $language_name_js = json_encode($qa->get_qt_field_name('language_id'));
+        $slot_js = json_encode((string)$qa->get_slot());
+        $question_id_js = json_encode((string)$qa->get_question_id());
+        $autosave_url_js = json_encode($CFG->wwwroot . '/mod/quiz/autosave.ajax.php');
+        $recheck_url_js = json_encode($CFG->wwwroot . '/question/type/judge0/ajax/recheck.php');
+        $status_url_js = json_encode($CFG->wwwroot . '/question/type/judge0/ajax/status.php');
+        $default_title_js = json_encode(get_string('recheck_button', 'qtype_judge0'));
+        $wait_title_js = json_encode(get_string('recheck_wait', 'qtype_judge0'));
+        $saving_title_js = json_encode(get_string('recheck_saving', 'qtype_judge0'));
+        $queued_title_js = json_encode(get_string('recheck_queued', 'qtype_judge0'));
+        $running_title_js = json_encode(get_string('recheck_running', 'qtype_judge0'));
+        $passed_title_js = json_encode(get_string('recheck_passed', 'qtype_judge0'));
+        $failed_title_js = json_encode(get_string('recheck_failed', 'qtype_judge0'));
+        $error_title_js = json_encode(get_string('recheck_error', 'qtype_judge0'));
+        $timeout_title_js = json_encode(get_string('recheck_timeout', 'qtype_judge0'));
+        $hidden_test_js = json_encode('<span style="color:#6c757d;font-style:italic;">Скрытый тест</span>');
+        $hidden_value_js = json_encode('<span style="color:#6c757d;font-style:italic;">Скрыто</span>');
+        $empty_value_js = json_encode('Пусто');
+        $state_correct_js = json_encode(get_string('correct', 'question'));
+        $state_incorrect_js = json_encode(get_string('incorrect', 'question'));
+        $state_partial_js = json_encode(get_string('partiallycorrect', 'question'));
+        $onclick = "
+            (function(button) {
+                var form = button.closest('form');
+                if (!form) {
+                    console.error('Quiz form not found for Judge0 recheck button');
+                    return false;
+                }
+
+                if (button.getAttribute('data-running') === '1') {
+                    return false;
+                }
+
+                var now = Date.now();
+                var lastRun = Number(button.getAttribute('data-last-run') || 0);
+                var waitTitle = {$wait_title_js};
+                var defaultTitle = button.getAttribute('data-original-title')
+                    || button.getAttribute('title')
+                    || {$default_title_js};
+
+                if (!button.getAttribute('data-original-title')) {
+                    button.setAttribute('data-original-title', defaultTitle);
+                }
+
+                if (now - lastRun < 5000) {
+                    button.setAttribute('title', waitTitle);
+                    return false;
+                }
+                button.setAttribute('data-last-run', String(now));
+
+                var statusBox = button.parentNode.querySelector('[data-qtype-judge0-recheck-status=\"1\"]');
+                var setStatus = function(message, isError) {
+                    if (!statusBox) {
+                        return;
                     }
-                })()">
-                &#x1F501; ' . get_string('recheck_button', 'qtype_judge0') . '
-            </button>
-        </div>';
+                    statusBox.textContent = message || '';
+                    statusBox.style.color = isError ? '#dc3545' : '#495057';
+                };
+
+                var clearStatus = function() {
+                    if (statusBox) {
+                        statusBox.textContent = '';
+                        while (statusBox.firstChild) {
+                            statusBox.removeChild(statusBox.firstChild);
+                        }
+                    }
+                    var original = form.querySelector('.qtype-judge0-original-results');
+                    if (original) {
+                        original.style.display = 'none';
+                    }
+                };
+
+                var appendCell = function(row, value, isHtml) {
+                    var cell = document.createElement('td');
+                    cell.style.padding = '10px 12px';
+                    cell.style.verticalAlign = 'top';
+                    if (isHtml) {
+                        cell.innerHTML = value;
+                    } else {
+                        var pre = document.createElement('pre');
+                        pre.style.margin = '0';
+                        pre.style.fontSize = '13px';
+                        pre.style.background = 'transparent';
+                        pre.style.border = '0';
+                        pre.style.padding = '0';
+                        pre.style.whiteSpace = 'pre-wrap';
+                        pre.textContent = value || '';
+                        cell.appendChild(pre);
+                    }
+                    row.appendChild(cell);
+                };
+
+                var renderResults = function(payload) {
+                    if (!statusBox) {
+                        return;
+                    }
+
+                    var que = button.closest('.que');
+                    if (que && payload && payload.state) {
+                        var stateDiv = que.querySelector('.state');
+                        var stateClass = 'incorrect';
+                        var stateText = {$state_incorrect_js};
+                        
+                        if (payload.state === 'gradedright') {
+                            stateClass = 'correct';
+                            stateText = {$state_correct_js};
+                        } else if (payload.state === 'gradedpartial') {
+                            stateClass = 'partiallycorrect';
+                            stateText = {$state_partial_js};
+                        }
+                        
+                        que.classList.remove('notanswered', 'incorrect', 'partiallycorrect', 'correct');
+                        que.classList.add(stateClass);
+                        
+                        if (stateDiv) {
+                            stateDiv.textContent = stateText;
+                        }
+                        
+                        var gradeDiv = que.querySelector('.grade');
+                        if (gradeDiv && payload.fraction !== undefined && payload.fraction !== null) {
+                            var numbers = gradeDiv.textContent.match(/[\d.]+/g);
+                            if (numbers && numbers.length >= 2) {
+                                var maxMark = parseFloat(numbers[1]);
+                                var newMark = (parseFloat(payload.fraction) * maxMark).toFixed(2);
+                                gradeDiv.textContent = gradeDiv.textContent.replace(numbers[0], newMark);
+                            } else if (numbers && numbers.length === 1) {
+                                var maxMark = parseFloat(numbers[0]);
+                                var newMark = (parseFloat(payload.fraction) * maxMark).toFixed(2);
+                                gradeDiv.textContent = 'Mark ' + newMark + ' out of ' + maxMark.toFixed(2);
+                            }
+                        }
+                    }
+
+                    clearStatus();
+                    var title = document.createElement('div');
+                    var passed = payload && (payload.state === 'gradedright' || Number(payload.fraction) >= 1);
+                    title.textContent = passed ? {$passed_title_js} : {$failed_title_js};
+                    title.style.fontWeight = '600';
+                    title.style.marginBottom = '8px';
+                    title.style.color = passed ? '#155724' : '#721c24';
+                    statusBox.appendChild(title);
+
+                    var results = payload && payload.results ? payload.results : [];
+                    if (!results.length) {
+                        if (payload && payload.error) {
+                            title.textContent = {$error_title_js} + ' ' + payload.error;
+                        }
+                        return;
+                    }
+
+                    var h4 = document.createElement('h4');
+                    h4.style.marginBottom = '15px';
+                    h4.style.marginTop = '25px';
+                    h4.style.paddingTop = '15px';
+                    h4.style.borderTop = '2px solid #dee2e6';
+                    h4.style.color = '#495057';
+                    h4.textContent = 'Результаты тестирования:';
+                    statusBox.appendChild(h4);
+
+                    var table = document.createElement('table');
+                    table.className = 'generaltable table table-bordered table-striped table-hover';
+                    table.style.width = '100%';
+                    table.style.textAlign = 'left';
+                    table.style.backgroundColor = '#fff';
+                    table.style.marginBottom = '20px';
+
+                    var head = document.createElement('thead');
+                    head.style.backgroundColor = '#f8f9fa';
+                    var headRow = document.createElement('tr');
+                    
+                    var th1 = document.createElement('th'); th1.textContent = '#'; th1.style.padding = '10px 12px'; th1.style.width = '1%'; headRow.appendChild(th1);
+                    var th2 = document.createElement('th'); th2.textContent = 'Ввод (stdin)'; th2.style.padding = '10px 12px'; headRow.appendChild(th2);
+                    var th3 = document.createElement('th'); th3.textContent = 'Ожидалось'; th3.style.padding = '10px 12px'; headRow.appendChild(th3);
+                    var th4 = document.createElement('th'); th4.textContent = 'Ваш вывод'; th4.style.padding = '10px 12px'; headRow.appendChild(th4);
+                    var th5 = document.createElement('th'); th5.textContent = 'Статус'; th5.style.padding = '10px 12px'; th5.style.width = '1%'; th5.style.whiteSpace = 'nowrap'; headRow.appendChild(th5);
+                    
+                    head.appendChild(headRow);
+                    table.appendChild(head);
+
+                    var body = document.createElement('tbody');
+                    results.forEach(function(result, index) {
+                        var testcase = result._testcase || {};
+                        var status = result.status || {};
+                        var row = document.createElement('tr');
+                        
+                        var bIndex = document.createElement('b');
+                        bIndex.textContent = String(index + 1);
+                        var indexCell = document.createElement('td');
+                        indexCell.style.padding = '10px 12px';
+                        indexCell.style.verticalAlign = 'top';
+                        indexCell.appendChild(bIndex);
+                        row.appendChild(indexCell);
+                        
+                        var isHidden = testcase.is_hidden && String(testcase.is_hidden) !== '0' && String(testcase.is_hidden) !== 'false';
+                        if (isHidden) {
+                            appendCell(row, {$hidden_test_js}, true);
+                            appendCell(row, {$hidden_value_js}, true);
+                            appendCell(row, {$hidden_value_js}, true);
+                        } else {
+                            var inputHtml = '<pre style=\"margin:0;font-size:13px;background:transparent;border:0;padding:0;white-space:pre-wrap;\">' + 
+                                            (testcase.input || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+                            if (testcase.is_dynamic) {
+                                inputHtml += '<div style=\"font-size:11px;color:#17a2b8;margin-top:3px;\">(Сгенерировано)</div>';
+                            }
+                            appendCell(row, inputHtml, true);
+                            appendCell(row, testcase.expected || '', false);
+                            
+                            var output = result.stdout || '';
+                            if (result.compile_output) {
+                                output += (output ? '\\n' : '') + '[COMPILE]\\n' + result.compile_output;
+                            }
+                            if (result.stderr) {
+                                output += (output ? '\\n' : '') + '[STDERR]\\n' + result.stderr;
+                            }
+                            if (result.message) {
+                                output += (output ? '\\n' : '') + '[MESSAGE]\\n' + result.message;
+                            }
+                            if (!output || output.trim() === '') {
+                                appendCell(row, {$empty_value_js}, false);
+                            } else {
+                                appendCell(row, output, false);
+                            }
+                        }
+                        
+                        var statusId = status.id || 0;
+                        var statusHtml = '';
+                        if (statusId == 3) {
+                            statusHtml = '<span style=\"display:inline-block;background-color:#28a745;color:white;padding:4px 8px;border-radius:4px;font-weight:bold;font-size:13px;\">' + (status.description || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>';
+                        } else {
+                            statusHtml = '<span style=\"display:inline-block;background-color:#dc3545;color:white;padding:4px 8px;border-radius:4px;font-weight:bold;font-size:13px;\">' + (status.description || 'Ошибка').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>';
+                        }
+                        appendCell(row, statusHtml, true);
+                        
+                        body.appendChild(row);
+                    });
+                    table.appendChild(body);
+                    statusBox.appendChild(table);
+                };
+
+                var readJson = function(response) {
+                    return response.text().then(function(text) {
+                        var data = text ? JSON.parse(text) : {};
+                        if (!response.ok || data.error) {
+                            throw new Error(data.error || data.message || response.statusText);
+                        }
+                        return data;
+                    });
+                };
+
+                var fetchJson = function(url, options) {
+                    options.credentials = 'same-origin';
+                    options.headers = options.headers || {};
+                    options.headers['X-Requested-With'] = 'XMLHttpRequest';
+                    return fetch(url, options).then(readJson);
+                };
+
+                var finishButton = function() {
+                    button.removeAttribute('data-running');
+                    var elapsed = Date.now() - now;
+                    var wait = Math.max(0, 5000 - elapsed);
+                    window.setTimeout(function() {
+                        if (button.getAttribute('data-running') !== '1') {
+                            button.disabled = false;
+                            button.setAttribute('title', defaultTitle);
+                        }
+                    }, wait);
+                };
+
+                var editors = form.querySelectorAll('textarea[data-qtype-judge0-editor=\"1\"]');
+                var syncs = [];
+                Array.prototype.forEach.call(editors, function(textarea) {
+                    if (typeof textarea.qtypeJudge0Sync === 'function') {
+                        textarea.qtypeJudge0Sync();
+                    }
+                    if (typeof textarea.qtypeJudge0RequestSync === 'function') {
+                        var sync = textarea.qtypeJudge0RequestSync();
+                        if (sync && typeof sync.then === 'function') {
+                            syncs.push(sync);
+                        }
+                    }
+                });
+
+                button.disabled = true;
+                button.setAttribute('data-running', '1');
+                button.setAttribute('title', waitTitle);
+                setStatus({$saving_title_js}, false);
+
+                var runQueuedRecheck = function() {
+                    var autosaveUrl = {$autosave_url_js};
+                    var recheckUrl = {$recheck_url_js};
+                    var statusUrl = {$status_url_js};
+                    var answerName = {$answer_name_js};
+                    var languageName = {$language_name_js};
+                    var slot = {$slot_js};
+                    var questionId = {$question_id_js};
+                    var autosaveData = new FormData(form);
+
+                    if (!autosaveData.get('sesskey') && typeof M !== 'undefined' && M.cfg && M.cfg.sesskey) {
+                        autosaveData.set('sesskey', M.cfg.sesskey);
+                    }
+
+                    var attemptId = autosaveData.get('attempt');
+                    var sesskey = autosaveData.get('sesskey');
+                    var answer = autosaveData.get(answerName) || '';
+                    var languageId = autosaveData.get(languageName) || '';
+
+                    if (!attemptId) {
+                        throw new Error('Quiz attempt id not found.');
+                    }
+                    if (!sesskey) {
+                        throw new Error('Moodle session key not found.');
+                    }
+
+                    var urlEncodedData = new URLSearchParams(autosaveData).toString();
+
+                    return fetch(autosaveUrl, {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: urlEncodedData
+                    }).then(readJson).then(function(autosaveResult) {
+                        if (!autosaveResult || autosaveResult.status !== 'OK') {
+                            throw new Error({$error_title_js});
+                        }
+
+                        setStatus({$queued_title_js}, false);
+                        var recheckData = new FormData();
+                        recheckData.set('sesskey', sesskey);
+                        recheckData.set('attemptid', attemptId);
+                        recheckData.set('cmid', autosaveData.get('cmid') || '');
+                        recheckData.set('slot', slot);
+                        recheckData.set('questionid', questionId);
+                        recheckData.set('answer', answer);
+                        recheckData.set('languageid', languageId);
+
+                        return fetch(recheckUrl, {
+                            method: 'POST',
+                            credentials: 'same-origin',
+                            headers: {'X-Requested-With': 'XMLHttpRequest'},
+                            body: recheckData
+                        }).then(readJson);
+                    }).then(function(queueResult) {
+                        if (!queueResult || !queueResult.token) {
+                            throw new Error({$error_title_js});
+                        }
+
+                        setStatus({$running_title_js}, false);
+                        var poll = function(attempt) {
+                            var statusData = new FormData();
+                            statusData.set('sesskey', sesskey);
+                            statusData.set('token', queueResult.token);
+
+                            return fetch(statusUrl, {
+                                method: 'POST',
+                                credentials: 'same-origin',
+                                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                                body: statusData
+                            }).then(readJson).then(function(statusResult) {
+                                if (statusResult.status === 'completed') {
+                                    renderResults(statusResult);
+                                    finishButton();
+                                    return;
+                                }
+                                if (statusResult.status === 'failed') {
+                                    setStatus({$error_title_js} + (statusResult.error ? ' ' + statusResult.error : ''), true);
+                                    finishButton();
+                                    return;
+                                }
+                                if (attempt >= 120) {
+                                    setStatus({$timeout_title_js}, true);
+                                    finishButton();
+                                    return;
+                                }
+                                window.setTimeout(function() {
+                                    poll(attempt + 1);
+                                }, Math.min(1000 + attempt * 250, 5000));
+                            });
+                        };
+
+                        return poll(0);
+                    });
+                };
+
+                if (syncs.length > 0 && typeof Promise !== 'undefined') {
+                    Promise.all(syncs).then(runQueuedRecheck).catch(function(error) {
+                        setStatus({$error_title_js} + ' ' + error.message, true);
+                        finishButton();
+                    });
+                } else {
+                    try {
+                        runQueuedRecheck().catch(function(error) {
+                            setStatus({$error_title_js} + ' ' + error.message, true);
+                            finishButton();
+                        });
+                    } catch (error) {
+                        setStatus({$error_title_js} + ' ' + error.message, true);
+                        finishButton();
+                    }
+                }
+                return false;
+            })(this);
+        ";
+
+        $button = html_writer::tag('button',
+            '&#x1F501; ' . get_string('recheck_button', 'qtype_judge0'),
+            array(
+                'type' => 'button',
+                'data-qtype-judge0-recheck' => '1',
+                'title' => get_string('recheck_button', 'qtype_judge0'),
+                'style' => 'padding: 8px 20px; background: #0f6cbf; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;',
+                'onclick' => $onclick
+            )
+        );
+
+        $status = html_writer::tag('div', '', array(
+            'data-qtype-judge0-recheck-status' => '1',
+            'style' => 'margin-top: 10px; text-align: left; font-size: 14px;'
+        ));
+
+        return html_writer::tag('div', $button . $status, array('style' => 'margin-top: 16px; text-align: right;'));
     }
 
     private function get_monaco_base_url() {
@@ -387,12 +858,7 @@ class qtype_judge0_renderer extends qtype_renderer {
     }
 
     private function get_debug_box(question_attempt $qa, $question) {
-        $stored = $qa->get_last_qt_var('_judge0_result', '');
-        $data = json_decode($stored, true);
-        
-        if (empty($data) && !empty($question->last_judge0_response)) {
-            $data = $question->last_judge0_response;
-        }
+        $data = !empty($question->last_judge0_response) ? $question->last_judge0_response : [];
 
         global $SESSION;
         if (empty($data) && !empty($SESSION->qtype_judge0_last_result)) {
@@ -408,7 +874,7 @@ class qtype_judge0_renderer extends qtype_renderer {
             $data = [$data];
         }
 
-        $box = '<div style="margin-top: 25px; border-top: 2px solid #dee2e6; padding-top: 15px;">';
+        $box = '<div class="qtype-judge0-original-results" style="margin-top: 25px; border-top: 2px solid #dee2e6; padding-top: 15px;">';
         $box .= '<h4 style="margin-bottom: 15px; color: #495057;">Результаты тестирования:</h4>';
         $box .= '<div class="table-responsive">';
         $box .= '<table class="generaltable table table-bordered table-striped table-hover" style="width: 100%; text-align: left; background-color: #fff; margin-bottom: 20px;">';

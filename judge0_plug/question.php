@@ -10,6 +10,8 @@ class qtype_judge0_question extends question_graded_automatically {
     public $reference_solution = '';
     public $reference_solution_language_id = 71;
     public $compiler_options = '';
+    public $cpu_time_limit = null;
+    public $memory_limit = null;
     public $input_generator_code = '';
     public $input_generator_language_id = 71;
     public $testcases = [];
@@ -19,8 +21,19 @@ class qtype_judge0_question extends question_graded_automatically {
 
 
     public function grade_response(array $response) {
+        $cached = $this->get_cached_recheck_result($response);
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        return $this->evaluate_response($response);
+    }
+
+    public function evaluate_response(array $response, $student_id = null) {
         global $USER;
-        $student_id = $USER->id ?? rand(1000, 9999);
+        if ($student_id === null) {
+            $student_id = $USER->id ?? rand(1000, 9999);
+        }
 
         $code = $response['answer'] ?? '';
         if (trim($code) === '') {
@@ -133,6 +146,12 @@ class qtype_judge0_question extends question_graded_automatically {
             ];
             if (!empty($this->compiler_options)) {
                 $sub_payload['compiler_options'] = $this->compiler_options;
+            }
+            if (!empty($this->cpu_time_limit)) {
+                $sub_payload['cpu_time_limit'] = (float)$this->cpu_time_limit;
+            }
+            if (!empty($this->memory_limit)) {
+                $sub_payload['memory_limit'] = (int)$this->memory_limit;
             }
             $submissions[] = $sub_payload;
         }
@@ -369,6 +388,75 @@ class qtype_judge0_question extends question_graded_automatically {
         $SESSION->qtype_judge0_last_result = json_encode($this->last_judge0_response);
 
         return array(0.0, question_state::$gradedwrong);
+    }
+
+    public static function hash_response($answer, $language_id) {
+        return hash('sha256', json_encode([
+            'answer' => (string)$answer,
+            'language_id' => (int)$language_id
+        ], JSON_UNESCAPED_UNICODE));
+    }
+
+    private function get_cached_recheck_result(array $response) {
+        global $DB, $USER, $SESSION;
+
+        if (empty($DB) || empty($this->id)) {
+            return null;
+        }
+
+        if (!$DB->get_manager()->table_exists('qtype_judge0_queue')) {
+            return null;
+        }
+
+        $code = $response['answer'] ?? '';
+        if (trim($code) === '') {
+            return null;
+        }
+
+        $lang_id = $this->resolve_language_id($response);
+        if ($lang_id === false) {
+            return null;
+        }
+
+        $params = [
+            'userid' => (int)($USER->id ?? 0),
+            'questionid' => (int)$this->id,
+            'languageid' => (int)$lang_id,
+            'answerhash' => self::hash_response($code, $lang_id),
+            'status' => 'completed',
+            'freshafter' => time() - 21600
+        ];
+
+        if ($params['userid'] <= 0) {
+            return null;
+        }
+
+        $records = $DB->get_records_select(
+            'qtype_judge0_queue',
+            'userid = :userid AND questionid = :questionid AND languageid = :languageid ' .
+                'AND answerhash = :answerhash AND status = :status AND timecompleted > :freshafter',
+            $params,
+            'timecompleted DESC, id DESC',
+            '*',
+            0,
+            1
+        );
+
+        if (empty($records)) {
+            return null;
+        }
+
+        $record = reset($records);
+        $result = json_decode($record->resultjson ?? '[]', true);
+        if (!is_array($result)) {
+            return null;
+        }
+
+        $this->last_judge0_response = $result;
+        $SESSION->qtype_judge0_last_result = json_encode($result);
+
+        $state = question_state::get($record->state ?: 'gradedwrong') ?: question_state::$gradedwrong;
+        return [(float)$record->fraction, $state];
     }
 
     public function summarise_response(array $response) { return isset($response['answer']) ? $response['answer'] : null; }

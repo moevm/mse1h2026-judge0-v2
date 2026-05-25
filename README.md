@@ -76,6 +76,6 @@ Expected Output:
 9) Save changes
 10) Выбираем вкладку quize и решаем задачу
 
-Пример переноса реальной задачи из курса программирования: [demo/unrolled_list_variant3](demo/unrolled_list_variant3/)
+Пример переноса реальной задачи из курса программирования: [demo/unrolled_list_variant3](https://github.com/moevm/mse1h2026-judge0/tree/reports/demo/unrolled_list_variant3)
 
 Демонстрация работы примера: [видео на Google Drive](https://drive.google.com/file/d/1DYltL82k3tY1l9y3F-iG4EVFtAuO1PK5/view?usp=sharing)

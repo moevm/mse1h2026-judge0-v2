@@ -18,7 +18,7 @@
 ### Инструкция по запуску
 #### Развертывание контейнеров
 - Перейдите в ветку проекта ```master```
-- Установить образ убуту [link](https://drive.google.com/drive/u/1/folders/1yaOkhyw99g63MnO0nDXtLBTjpZcPOfGz)
+- Установить образ убунту [link](https://drive.google.com/drive/u/1/folders/1yaOkhyw99g63MnO0nDXtLBTjpZcPOfGz)
 - Запустите скрипт judge0_script.sh. Затем скопируйте ip адрес, который скприпт выдаст
 - Заруститите докер контейнер, который лежит рядом judge0_script.sh 
 #### Настройка плагина в Moodle

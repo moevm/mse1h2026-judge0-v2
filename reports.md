@@ -82,9 +82,9 @@ Expected Output:
 ### Презентация
 https://docs.google.com/presentation/d/1l2NJeln0gRLKs1yVybPTboE1BW9C8IgP6h7qQQGyocY/edit?slide=id.g3cb0a7c1a51_0_0#slide=id.g3cb0a7c1a51_0_0
 ### Скринкасты
-https://drive.google.com/drive/folders/1dCpGbIAP-D0yAPnwmvXtxk72HbtZ8GgL
+https://drive.google.com/file/d/1nsiPzZMp2bStZ2hB9t99yv7YmuDDk7yW/view
 ### Запись встречи
-https://drive.google.com/drive/folders/1dCpGbIAP-D0yAPnwmvXtxk72HbtZ8GgL
+https://drive.google.com/file/d/1SynwfrhT_bVh6MepgKYx2FclTnLbORZz/view
 ### Запланированные задачи
 1) Поднятие docker контейнера с moodle
 2) Интеграция плагинов (coderunner, русский язык системы, автоматическая установка параметров при скачивании плагинов)
@@ -108,9 +108,9 @@ https://drive.google.com/drive/folders/1dCpGbIAP-D0yAPnwmvXtxk72HbtZ8GgL
 ### Презентация
 https://docs.google.com/presentation/d/1w81xGnQDcJMihZPV8g90Dy_wVVDn5dw6rMZZoKrXK3c/edit?usp=sharing
 ### Скринкасты
-https://drive.google.com/file/d/1nsiPzZMp2bStZ2hB9t99yv7YmuDDk7yW/view?usp=drive_link
+https://drive.google.com/file/d/1DYltL82k3tY1l9y3F-iG4EVFtAuO1PK5/view
 ### Запись встречи
-https://drive.google.com/file/d/1SynwfrhT_bVh6MepgKYx2FclTnLbORZz
+https://drive.google.com/file/d/1N7VKTNtBRrirRcjpEr-dRo6GeM5XdAtS/view
 
 ### Запланированные задачи
 1) Создание каркаса плагина judge0 в Moodle
@@ -160,7 +160,7 @@ https://drive.google.com/file/d/1SynwfrhT_bVh6MepgKYx2FclTnLbORZz
 ### Презентация
 https://docs.google.com/presentation/d/1e3A5K-_yb_dJxYJxLZL051l49dLoOtOUpJytlUlmwTE/edit?usp=sharing
 ### Скринкасты и запись встречи
-https://drive.google.com/drive/folders/15-Z8J5ltd_xVVuB_qEK47KNNmM2-QjJC?usp=sharing 
+https://drive.google.com/file/d/16P4ctoraK22niMgd1aV-sKN1YqAY7EnO/view
 
 ### Выполненные задачи (по плану)
 1) Переход на асинхронную модель проверки с адаптивным интервалом (0.5с -> 2с) и настраиваемым таймаутом (5–120 сек через `poll_timeout` в настройках)

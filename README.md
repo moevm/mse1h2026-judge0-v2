@@ -45,9 +45,9 @@
 
 Далее объясние логики работы
 
-Есть два поля - Checker Code и Expected Output. 
+Есть два поля - Expected input и Expected Output. 
 
-1) Checker Code  - необходим чтобы вызвать функцию решение.
+1) Epected input  - необходим чтобы вызвать функцию решение.
 2) Expected Output - проверка вывода функции решения
 3) При установке Memory limit необходимо установить от 4000 кб (для python) и 20 Cpu Time limit
 
@@ -58,19 +58,17 @@
 def solve(x):
    print(x + x) 
 ```
-Checker Code:
+Expectes input
 
 ```
-solve(2)
-solve(5)
+1
 ```
 Expected Output:
 
 ```
-4
-10
+2
 ```
-Для простоты проверки работоспособности плагина достаточно просто Checker Code оставить пустым, в Expected Output написать `1`, а в решении просто написать ```print(1)```
+
 
 Когда поля заполнены, далее:
 

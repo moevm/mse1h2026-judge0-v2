@@ -112,6 +112,14 @@ class qtype_judge0_edit_form extends question_edit_form {
         $mform->setType('compiler_options', PARAM_RAW);
         $mform->addHelpButton('compiler_options', 'compiler_options', 'qtype_judge0');
 
+        $mform->addElement('text', 'cpu_time_limit', get_string('cpu_time_limit', 'qtype_judge0'), ['size' => 10]);
+        $mform->setType('cpu_time_limit', PARAM_FLOAT);
+        $mform->addHelpButton('cpu_time_limit', 'cpu_time_limit', 'qtype_judge0'); // Uses cpu_time_limit_help.
+
+        $mform->addElement('text', 'memory_limit', get_string('memory_limit', 'qtype_judge0'), ['size' => 10]);
+        $mform->setType('memory_limit', PARAM_INT);
+        $mform->addHelpButton('memory_limit', 'memory_limit', 'qtype_judge0'); // Uses memory_limit_help.
+
         $mform->addElement('header', 'inputgeneratorheader', get_string('input_generator_header', 'qtype_judge0'));
         $mform->addElement('select', 'input_generator_language_id', get_string('input_generator_language_id', 'qtype_judge0'), $languages);
         $mform->setDefault('input_generator_language_id', 71);
@@ -170,6 +178,8 @@ class qtype_judge0_edit_form extends question_edit_form {
             $question->reference_solution = $question->options->reference_solution ?? '';
             $question->reference_solution_language_id = $question->options->reference_solution_language_id ?? 71;
             $question->compiler_options = $question->options->compiler_options ?? '';
+            $question->cpu_time_limit = $question->options->cpu_time_limit ?? '';
+            $question->memory_limit = $question->options->memory_limit ?? '';
             $question->input_generator_code = $question->options->input_generator_code ?? '';
             $question->input_generator_language_id = $question->options->input_generator_language_id ?? 71;
             $question->expected_output = $question->options->expected_output ?? '';
@@ -186,6 +196,22 @@ class qtype_judge0_edit_form extends question_edit_form {
             }
         }
         return $question;
+    }
+
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        $cpu = isset($data['cpu_time_limit']) ? trim((string)$data['cpu_time_limit']) : '';
+        if ($cpu !== '' && (!is_numeric($cpu) || (float)$cpu < 0.1 || (float)$cpu > 30)) {
+            $errors['cpu_time_limit'] = get_string('invaliddata', 'error');
+        }
+
+        $memory = isset($data['memory_limit']) ? trim((string)$data['memory_limit']) : '';
+        if ($memory !== '' && (!preg_match('/^\d+$/', $memory) || (int)$memory < 1024 || (int)$memory > 1048576)) {
+            $errors['memory_limit'] = get_string('invaliddata', 'error');
+        }
+
+        return $errors;
     }
 
     public function qtype() {

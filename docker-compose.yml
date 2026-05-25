@@ -1,0 +1,57 @@
+x-logging:
+  &default-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100M
+
+services:
+  # СЕРВИСЫ MOODLE
+  mariadb:
+    image: public.ecr.aws/bitnami/mariadb:latest
+    platform: linux/amd64
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      - MARIADB_USER=${MARIADB_USER:-bn_moodle}
+      - MARIADB_DATABASE=${MARIADB_DATABASE:-bitnami_moodle}
+      - MARIADB_CHARACTER_SET=${MARIADB_CHARACTER_SET:-utf8mb4}
+      - MARIADB_COLLATE=${MARIADB_COLLATE:-utf8mb4_unicode_ci}
+      - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+
+  moodle:
+    image: public.ecr.aws/bitnami/moodle:latest
+    platform: linux/amd64
+    ports:
+      - '80:8080'
+      - '443:8443'
+    volumes:
+      - 'moodle_data:/bitnami/moodle'
+      - 'moodledata_data:/bitnami/moodledata'
+    depends_on:
+      - mariadb
+    environment:
+      - MOODLE_DATABASE_HOST=mariadb
+      - MOODLE_DATABASE_PORT_NUMBER=3306
+      - MOODLE_DATABASE_USER=${MARIADB_USER:-bn_moodle}
+      - MOODLE_DATABASE_NAME=${MARIADB_DATABASE:-bitnami_moodle}
+      - MOODLE_DATABASE_TYPE=mariadb
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MOODLE_USERNAME=admin
+      - MOODLE_PASSWORD=bitnami1
+      - MOODLE_EMAIL=user@example.com
+      - MOODLE_SITENAME=New Site
+      - MOODLE_LANGUAGE=ru
+    restart: always
+
+# ОБЩИЕ ДАННЫЕ 
+volumes:
+  mariadb_data:
+    driver: local
+  moodle_data:
+    driver: local
+  moodledata_data:
+    driver: local
+  postgres_data:  
+    driver: local

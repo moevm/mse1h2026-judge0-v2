@@ -15,7 +15,7 @@ class qtype_judge0 extends question_type {
 
     
     public function extra_question_fields() {
-        return array('qtype_judge0_options', 'language_id', 'allowed_languages', 'checker_code', 'expected_output', 'reference_solution', 'reference_solution_language_id', 'compiler_options', 'input_generator_code', 'input_generator_language_id');
+        return array('qtype_judge0_options', 'language_id', 'allowed_languages', 'checker_code', 'expected_output', 'reference_solution', 'reference_solution_language_id', 'compiler_options', 'cpu_time_limit', 'memory_limit', 'input_generator_code', 'input_generator_language_id');
     }
 
     public function save_question_options($formdata) {
@@ -34,6 +34,12 @@ class qtype_judge0 extends question_type {
         } else {
             $formdata->allowed_languages = '';
         }
+
+        $cpu_time_limit = trim((string)($formdata->cpu_time_limit ?? ''));
+        $formdata->cpu_time_limit = $cpu_time_limit === '' ? null : (float)$cpu_time_limit;
+
+        $memory_limit = trim((string)($formdata->memory_limit ?? ''));
+        $formdata->memory_limit = $memory_limit === '' ? null : (int)$memory_limit;
         
         global $DB;
         $result = parent::save_question_options($formdata);
@@ -102,6 +108,8 @@ class qtype_judge0 extends question_type {
         $question->reference_solution = $questiondata->options->reference_solution ?? '';
         $question->reference_solution_language_id = $questiondata->options->reference_solution_language_id ?? 71;
         $question->compiler_options = $questiondata->options->compiler_options ?? '';
+        $question->cpu_time_limit = $questiondata->options->cpu_time_limit ?? null;
+        $question->memory_limit = $questiondata->options->memory_limit ?? null;
         $question->input_generator_code = $questiondata->options->input_generator_code ?? '';
         $question->input_generator_language_id = $questiondata->options->input_generator_language_id ?? 71;
         $question->testcases = $questiondata->options->testcases ?? [];

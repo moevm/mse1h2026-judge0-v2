@@ -11,7 +11,9 @@
         <FIELD NAME="language_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="71" SEQUENCE="false" COMMENT="Judge0 language ID"/>
         <FIELD NAME="checker_code" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Teacher test code"/>
         <FIELD NAME="allowed_languages" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON array of allowed language IDs"/>
-        <FIELD NAME="compiler_options" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Additional compiler options"/>
+        <FIELD NAME="compiler_options" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Additional compiler options"/>
+        <FIELD NAME="cpu_time_limit" TYPE="number" LENGTH="10" DECIMALS="3" NOTNULL="false" SEQUENCE="false" COMMENT="CPU time limit in seconds"/>
+        <FIELD NAME="memory_limit" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Memory limit in KB"/>
         <FIELD NAME="reference_solution_language_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Language ID for reference solution"/>
         <FIELD NAME="expected_output" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Expected exact output from Judge0"/>
         <FIELD NAME="reference_solution" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Teacher reference solution"/>
@@ -36,6 +38,38 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
       </KEYS>
+    </TABLE>
+    <TABLE NAME="qtype_judge0_queue" COMMENT="Queued Judge0 recheck jobs">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="token" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="Public polling token"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Owner user id"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Quiz attempt id"/>
+        <FIELD NAME="usageid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Question usage id"/>
+        <FIELD NAME="slot" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Question slot in the attempt"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Question id"/>
+        <FIELD NAME="languageid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Judge0 language id"/>
+        <FIELD NAME="answerhash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="Hash of answer and language"/>
+        <FIELD NAME="answer" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Submitted answer snapshot"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="queued" SEQUENCE="false" COMMENT="queued, running, completed, failed"/>
+        <FIELD NAME="fraction" TYPE="number" LENGTH="10" DECIMALS="7" NOTNULL="false" SEQUENCE="false" COMMENT="Grade fraction"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="32" NOTNULL="false" SEQUENCE="false" COMMENT="Moodle question state"/>
+        <FIELD NAME="resultjson" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Judge0 result JSON"/>
+        <FIELD NAME="error" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Last processing error"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecompleted" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="questionid" TYPE="foreign" FIELDS="questionid" REFTABLE="question" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="token" UNIQUE="true" FIELDS="token"/>
+        <INDEX NAME="ownerhash" UNIQUE="false" FIELDS="userid, attemptid, slot, questionid, answerhash"/>
+        <INDEX NAME="status" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

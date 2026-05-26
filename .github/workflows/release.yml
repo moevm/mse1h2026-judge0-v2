@@ -19,11 +19,12 @@ jobs:
 
       - name: Build Zip Archive
         run: |
-          
           zip -r qtype_judge0.zip judge0_plug/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: qtype_judge0.zip
-          generate_release_notes: true 
+          tag_name: "latest" 
+          name: "Latest Version" 
+          generate_release_notes: true

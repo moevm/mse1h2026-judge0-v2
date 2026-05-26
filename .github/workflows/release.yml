@@ -1,0 +1,29 @@
+name: Release Moodle Plugin
+
+on:
+  push:
+    branches:
+      - main 
+
+permissions:
+  contents: write 
+
+jobs:
+  release:
+    name: Build and Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Zip Archive
+        run: |
+          
+          zip -r qtype_judge0.zip judge0_plug/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: qtype_judge0.zip
+          generate_release_notes: true 

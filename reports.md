@@ -79,6 +79,7 @@ Expected Output:
 
 ## Итерация №1
 ### Презентация
+[Итерация 1. Презентация](docs/presentations/'Интеграция judge0 в moodle. Интерация 1.pdf')
 https://docs.google.com/presentation/d/1l2NJeln0gRLKs1yVybPTboE1BW9C8IgP6h7qQQGyocY/edit?slide=id.g3cb0a7c1a51_0_0#slide=id.g3cb0a7c1a51_0_0
 ### Скринкасты
 https://drive.google.com/file/d/1nsiPzZMp2bStZ2hB9t99yv7YmuDDk7yW/view

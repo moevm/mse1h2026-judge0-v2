@@ -80,9 +80,8 @@ Expected Output:
 ## Итерация №1
 ### Презентация
 [Итерация 1. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Интерация%201.pdf)
-https://docs.google.com/presentation/d/1l2NJeln0gRLKs1yVybPTboE1BW9C8IgP6h7qQQGyocY/edit?slide=id.g3cb0a7c1a51_0_0#slide=id.g3cb0a7c1a51_0_0
 ### Скринкасты
-https://drive.google.com/file/d/1nsiPzZMp2bStZ2hB9t99yv7YmuDDk7yW/view
+[Итерация 1. Скринкаст](docs/screencasts/Interation1_screencast.mp4)
 ### Запись встречи
 https://drive.google.com/file/d/1SynwfrhT_bVh6MepgKYx2FclTnLbORZz/view
 ### Запланированные задачи
@@ -106,9 +105,9 @@ https://drive.google.com/file/d/1SynwfrhT_bVh6MepgKYx2FclTnLbORZz/view
 
 ## Итерация №2
 ### Презентация
-https://docs.google.com/presentation/d/1w81xGnQDcJMihZPV8g90Dy_wVVDn5dw6rMZZoKrXK3c/edit?usp=sharing
+[Итерация 2. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Интерация%202.pdf)
 ### Скринкасты
-https://drive.google.com/file/d/1DYltL82k3tY1l9y3F-iG4EVFtAuO1PK5/view
+[Итерация 2. Скринкаст](docs/screencasts/Interation2_screencast.mov)
 ### Запись встречи
 https://drive.google.com/file/d/1N7VKTNtBRrirRcjpEr-dRo6GeM5XdAtS/view
 
@@ -157,10 +156,10 @@ https://drive.google.com/file/d/1N7VKTNtBRrirRcjpEr-dRo6GeM5XdAtS/view
 
 ## Итерация №3
 
-### Презентация
-https://docs.google.com/presentation/d/1e3A5K-_yb_dJxYJxLZL051l49dLoOtOUpJytlUlmwTE/edit?usp=sharing
-### Скринкаст
-https://drive.google.com/file/d/1DYltL82k3tY1l9y3F-iG4EVFtAuO1PK5/view
+## Презентация
+[Итерация 3. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Интерация%203.pdf)
+### Скринкасты
+[Итерация 3. Скринкаст](docs/screencasts/Interation3_screencast.mov)
 ### Запись встречи
 https://drive.google.com/file/d/16P4ctoraK22niMgd1aV-sKN1YqAY7EnO/view
 
@@ -194,10 +193,10 @@ https://drive.google.com/file/d/16P4ctoraK22niMgd1aV-sKN1YqAY7EnO/view
 
 ## Итерация №4
 
-### Презентация
-https://docs.google.com/presentation/d/1CssLj9vxEFpBFjADmAIuopoLdIK2vlVolB40497WSlo/edit?slide=id.p#slide=id.p
-### Скринкаст
-https://drive.google.com/file/d/10AT2-Vas8p1eemXOwnxQjHvdmxkrY2ge/view?usp=drive_link
+## Презентация
+[Итерация 4. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Интерация%204.pdf)
+### Скринкасты
+[Итерация 4. Скринкаст](docs/screencasts/Interation4_screencast.mov)
 ### Запись встречи
 -
 

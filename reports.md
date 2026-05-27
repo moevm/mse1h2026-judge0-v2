@@ -105,7 +105,7 @@ https://drive.google.com/file/d/1SynwfrhT_bVh6MepgKYx2FclTnLbORZz/view
 
 ## Итерация №2
 ### Презентация
-[Итерация 2. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Интерация%202.pdf)
+[Итерация 2. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Итерация%202.pdf)
 ### Скринкасты
 [Итерация 2. Скринкаст](docs/screencasts/Interation2_screencast.mov)
 ### Запись встречи
@@ -157,7 +157,7 @@ https://drive.google.com/file/d/1N7VKTNtBRrirRcjpEr-dRo6GeM5XdAtS/view
 ## Итерация №3
 
 ## Презентация
-[Итерация 3. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Интерация%203.pdf)
+[Итерация 3. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Итерация%203.pdf)
 ### Скринкасты
 [Итерация 3. Скринкаст](docs/screencasts/Interation3_screencast.mov)
 ### Запись встречи
@@ -194,7 +194,7 @@ https://drive.google.com/file/d/16P4ctoraK22niMgd1aV-sKN1YqAY7EnO/view
 ## Итерация №4
 
 ## Презентация
-[Итерация 4. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Интерация%204.pdf)
+[Итерация 4. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Итерация%204.pdf)
 ### Скринкасты
 [Итерация 4. Скринкаст](docs/screencasts/Interation4_screencast.mov)
 ### Запись встречи

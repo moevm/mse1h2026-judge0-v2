@@ -84,6 +84,7 @@ Expected Output:
 [Итерация 1. Скринкаст](docs/screencasts/Interation1_screencast.mp4)
 ### Запись встречи
 https://drive.google.com/file/d/1SynwfrhT_bVh6MepgKYx2FclTnLbORZz/view
+
 ### Запланированные задачи
 1) Поднятие docker контейнера с moodle
 2) Интеграция плагинов (coderunner, русский язык системы, автоматическая установка параметров при скачивании плагинов)
@@ -154,9 +155,9 @@ https://drive.google.com/file/d/1N7VKTNtBRrirRcjpEr-dRo6GeM5XdAtS/view
 9) Обновление и расширение тестов — покрытие новых фич в `test_plugin_acceptance.py`
 10) Подготовка демо — создание 3–5 задач различной сложности (простой ввод-вывод, функции, классы, генератор + идеальное решение) для презентации
 
-## Итерация №3
 
-## Презентация
+## Итерация №3
+### Презентация
 [Итерация 3. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Итерация%203.pdf)
 ### Скринкасты
 [Итерация 3. Скринкаст](docs/screencasts/Interation3_screencast.mov)
@@ -191,8 +192,8 @@ https://drive.google.com/file/d/16P4ctoraK22niMgd1aV-sKN1YqAY7EnO/view
 4) Настройка лимитов по задаче — `cpu_time_limit`, `memory_limit` на уровне каждого вопроса
 5) Подготовка финальной презентации
 
-## Итерация №4
 
+## Итерация №4
 ## Презентация
 [Итерация 4. Презентация](docs/presentations/Интеграция%20judge0%20в%20moodle.%20Итерация%204.pdf)
 ### Скринкасты
